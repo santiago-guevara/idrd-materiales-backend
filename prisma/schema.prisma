@@ -1,8 +1,65 @@
+// Genera el cliente de Prisma que utilizaremos desde NestJS.
 generator client {
   provider = "prisma-client-js"
 }
 
+// Configuración de conexión con PostgreSQL. La URL se obtiene desde la variable de entorno DATABASE_URL.
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// Unidades de medida (M², Unidad, Kg)
+model Unit {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  materials Material[]
+}
+
+// Representa los materiales que pueden utilizarse en los proyectos.
+model Material {
+  id          Int               @id @default(autoincrement())
+  code        String            @unique
+  description String
+  price       Decimal
+  unitId      Int
+  unit        Unit              @relation(fields: [unitId], references: [id])
+  projects    ProjectMaterial[]
+}
+
+// Catálogo de departamentos de Colombia.
+model Department {
+  id     Int    @id @default(autoincrement())
+  name   String @unique
+  cities City[]
+}
+
+// Catálogo de ciudades asociadas a un departamento.
+model City {
+  id           Int        @id @default(autoincrement())
+  name         String
+  departmentId Int
+  department   Department @relation(fields: [departmentId], references: [id])
+  projects     Project[]
+}
+
+// Representa un proyecto de infraestructura.
+model Project {
+  id        Int               @id @default(autoincrement())
+  name      String
+  cityId    Int
+  city      City              @relation(fields: [cityId], references: [id])
+  materials ProjectMaterial[]
+}
+
+// Materiales asignados a proyectos
+model ProjectMaterial {
+  projectId  Int
+  materialId Int
+  quantity   Decimal
+
+  project  Project  @relation(fields: [projectId], references: [id])
+  material Material @relation(fields: [materialId], references: [id])
+
+  @@id([projectId, materialId])
 }
