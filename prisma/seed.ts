@@ -11,6 +11,36 @@ async function main() {
     ],
     skipDuplicates: true,
   });
+
+  const bogota = await prisma.department.upsert({
+    where: { name: 'Bogotá D.C.' },
+    update: {},
+    create: { name: 'Bogotá D.C.' },
+  });
+
+  const antioquia = await prisma.department.upsert({
+    where: { name: 'Antioquia' },
+    update: {},
+    create: { name: 'Antioquia' },
+  });
+
+  await prisma.city.createMany({
+    data: [
+      {
+        name: 'Bogotá',
+        departmentId: bogota.id,
+      },
+      {
+        name: 'Medellín',
+        departmentId: antioquia.id,
+      },
+      {
+        name: 'Bello',
+        departmentId: antioquia.id,
+      },
+    ],
+    skipDuplicates: true,
+  });
 }
 
 main()
