@@ -8,8 +8,15 @@ export class MaterialsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll() {
-    return this.prisma.material.findMany();
-  }
+  return this.prisma.material.findMany({
+    include: {
+      unit: true,
+    },
+    orderBy: {
+      code: 'asc',
+    },
+  });
+}
 
   async create(createMaterialDto: CreateMaterialDto) {
     return this.prisma.material.create({
