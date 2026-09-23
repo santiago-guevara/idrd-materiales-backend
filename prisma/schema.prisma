@@ -41,6 +41,8 @@ model City {
   departmentId Int
   department   Department @relation(fields: [departmentId], references: [id])
   projects     Project[]
+
+  @@unique([name, departmentId])
 }
 
 // Representa un proyecto de infraestructura.
