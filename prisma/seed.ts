@@ -8,6 +8,8 @@ async function main() {
       { name: 'M²' },
       { name: 'Unidad' },
       { name: 'Kg' },
+      { name: 'M³' },
+      { name: 'Litro' },
     ],
     skipDuplicates: true,
   });
@@ -24,6 +26,18 @@ async function main() {
     create: { name: 'Antioquia' },
   });
 
+  const cundinamarca = await prisma.department.upsert({
+    where: { name: 'Cundinamarca' },
+    update: {},
+    create: { name: 'Cundinamarca' },
+  });
+
+  const valle = await prisma.department.upsert({
+    where: { name: 'Valle del Cauca' },
+    update: {},
+    create: { name: 'Valle del Cauca' },
+  });
+
   await prisma.city.createMany({
     data: [
       {
@@ -37,6 +51,26 @@ async function main() {
       {
         name: 'Bello',
         departmentId: antioquia.id,
+      },
+      {
+        name: 'Envigado',
+        departmentId: antioquia.id,
+      },
+      {
+        name: 'Itagüí',
+        departmentId: antioquia.id,
+      },
+      {
+        name: 'Soacha',
+        departmentId: cundinamarca.id,
+      },
+      {
+        name: 'Cali',
+        departmentId: valle.id,
+      },
+      {
+        name: 'Palmira',
+        departmentId: valle.id,
       },
     ],
     skipDuplicates: true,
